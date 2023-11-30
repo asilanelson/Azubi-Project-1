@@ -1,0 +1,76 @@
+import tkinter as tk
+import random
+#  FAQs and answers
+
+faqs = {
+    "hello": "Hello! How can I assist you today?",
+    "hi": "Hi there! What can I help you with?",
+    "how are you": "I'm just a bot, but thanks for asking!",
+    "What is Azubi Africa?":  "Azubi Africa is an online tech school",
+    "Who are the partners of Azubi Africa?" : "Azubi Africa has partnered with AWS, SAFARICOM",
+}
+
+def get_response(query):
+    query = query.lower()
+    response = "I'm sorry, I don't have an answer for that right now."
+    for key in faqs:
+        if query in key.lower():
+            response = faqs[key]
+            break
+    return response
+
+# Main loop for chat interaction
+while True:
+    user_query = input("You: ")
+    if user_query.lower() == 'exit':
+        print("Chatbot: Goodbye!")
+        break
+    else:
+        response = get_response(user_query)
+        print("Chatbot:", response)
+def send_message(event=None):
+    user_query = entry_field.get()
+    if user_query.lower() == 'exit':
+        chat_history.insert(tk.END, "You: " + user_query + '\n')
+        chat_history.insert(tk.END, "Chatbot: Goodbye!\n")
+        entry_field.delete(0, tk.END)
+    else:
+        chat_history.insert(tk.END, "You: " + user_query + '\n')
+        response = get_response(user_query)
+        chat_history.insert(tk.END, "Chatbot: " + response + '\n')
+        entry_field.delete(0, tk.END)
+
+# Create the main window
+root = tk.Tk()
+root.title("Simple Chatbot")
+
+# Create a frame to hold the chat history
+chat_frame = tk.Frame(root)
+chat_frame.pack(padx=10, pady=10)
+
+# Create a scrollbar for the chat history
+scrollbar = tk.Scrollbar(chat_frame)
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+# Create a text widget for the chat history
+chat_history = tk.Text(chat_frame, width=50, height=20, yscrollcommand=scrollbar.set)
+chat_history.pack()
+
+# Configure the scrollbar to work with the chat history
+scrollbar.config(command=chat_history.yview)
+
+# Create a frame to hold the input field and send button
+input_frame = tk.Frame(root)
+input_frame.pack(padx=10, pady=10)
+
+# Create an entry field for user input
+entry_field = tk.Entry(input_frame, width=40)
+entry_field.bind("<Return>", send_message)
+entry_field.pack(side=tk.LEFT, padx=5)
+
+# Create a button to send the message
+send_button = tk.Button(input_frame, text="Send", command=send_message)
+send_button.pack(side=tk.LEFT, padx=5)
+
+# Start the GUI event loop
+root.mainloop()
